@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import axios from 'axios';
-import { Grid, makeStyles, Paper } from "@material-ui/core";
+import { Box, Container, Grid, makeStyles, Paper } from "@material-ui/core";
 import { Route, Link } from "react-router-dom";
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles((theme) => ({
     img: {
@@ -33,14 +34,17 @@ const useStyles = makeStyles((theme) => ({
 const Home = props => {
     const [videos, setVideos] = useState([]);
     const classes = useStyles();
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(1);
+    const [limit, setLimit] = useState(6);
 
     useEffect(() => {
         const getAllVideos = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/home');
+                const res = await axios.get(`http://localhost:5000/home?page=${page}`);
                 const data = await res.data;
 
-                console.log(data);
+                // console.log(count);
                 setVideos(data);
             }
             catch (error) {
@@ -48,15 +52,21 @@ const Home = props => {
             }           
         }
 
-        getAllVideos();
-    },[]);
+        const getCount = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/count');
+                const data = await res.data;
+                
+                setCount(data);
+            }
+            catch (error) {
+                console.log('Something went wrong', error);
+            }
+        }
 
-    // const playVideoHandler = (id, url) => {
-    //     const vUrl = process.env.PUBLIC_URL+'/uploads/'+url;
-    //     <Route path='home/:id'>
-    //         <PlayVideo url={vUrl} id={id} />
-    //     </Route>
-    // }
+        getCount();
+        getAllVideos();
+    },[page]);
 
     if (videos) {
         return (
@@ -77,6 +87,20 @@ const Home = props => {
                         </Paper>
                     </Grid>
                 ))}
+            <Container component={Box} py={3}>
+                <Pagination 
+                    size='large'
+                    count={count}
+                    color='primary'
+                    page={page}
+                    defaultPage={page} 
+                    style={{backgroundColor: 'white'}}
+                    showFirstButton={true}
+                    showLastButton={true}
+                    onChange={(event, value) => setPage(value)}
+                />
+
+            </Container>
             </Grid>
             
         );

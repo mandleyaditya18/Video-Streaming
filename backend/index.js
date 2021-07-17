@@ -63,9 +63,27 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({storage: storage, fileFilter: fileFilter});
 
 app.get('/home', async (req, res) => {
-    const videos = await Movie.find();
-    // console.log(videos);
-    res.send(videos);
+  const page = req.query.page
+  // const limit = req.query.limit;
+
+  // console.log(page, limit);
+
+  // const page = 10;
+  const limit = 6;
+
+  try {
+      const posts = await Movie.find()
+                      .skip(limit * (page-1))
+                      .limit(limit)
+                      .then((results) => {
+                          return res.status(200).send(results);
+                      })
+                      .catch((err) => {
+                          return res.status(500).send(err);
+                      });
+  } catch (err) {
+      console.error(err.message);
+  }
 })
 
 app.get('/home/:id', async (req, res) => {
@@ -73,6 +91,17 @@ app.get('/home/:id', async (req, res) => {
     const video = await Movie.findOne({_id: id})
 
     res.send(video);
+})
+
+app.get('/count', async (req, res) => {
+  let cnt = 0;
+
+  await Movie.find().count(function(err, count){
+    cnt = count;
+    // console.log("Number of docs: ", cnt );
+  });
+
+  res.json(cnt);
 })
 
 app.post('/upload', upload.fields([{name: 'thumbnailImage'},{name: 'video'}]), (req, res) => {

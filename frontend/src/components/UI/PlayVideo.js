@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import ReactPlayer from 'react-player';
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Grid } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import axios from 'axios';
 
@@ -8,7 +8,8 @@ const useStyles = makeStyles((theme) => ({
     player: {
         width: '100%',
         height: '100%',
-        margin: 'auto'
+        margin: 'auto',
+        marginTop: '10%'
     }
 }));
 
@@ -40,7 +41,7 @@ const PlayVideo = props => {
     }
 
     return (
-        <Fragment>
+        <Grid container className={classes.root} spacing={3}>
             <ReactPlayer 
                 url={process.env.REACT_APP_UPLOAD_PATH + video.video} 
                 onClick={playHandler}
@@ -48,7 +49,7 @@ const PlayVideo = props => {
                 controls={true}
                 className={classes.player}
             />
-        </Fragment>
+        </Grid>
     );
 };
 
