@@ -60,7 +60,7 @@ const UploadForm = props => {
         formData.append('video', videoName);
 
         axios
-            .post('http://localhost:5000/upload', formData)
+            .post(process.env.REACT_APP_BASE_URL+'/upload', formData)
             .then((res) => setMessage(res.data))
             .catch((err) => {
                 console.log(err);
@@ -71,9 +71,7 @@ const UploadForm = props => {
         setLanguage('');
         setImageName('');
         setVideoName('');
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 3000)
+        setIsLoading(false);
     }
 
     return (
@@ -124,7 +122,7 @@ const UploadForm = props => {
                             }
                             else {
                                 setIsError((prev) => {
-                                    return {...prev, year: true}
+                                    return {...prev, year: false}
                                 });
                             }
                             setYear(e.target.value)
@@ -147,28 +145,47 @@ const UploadForm = props => {
                             }
                             else {
                                 setIsError((prev) => {
-                                    return {...prev, year: true}
+                                    return {...prev, language: false}
                                 });
                             }
                             setLanguage(e.target.value)
                         }} 
                     />
                     <h3 className={classes.label}>Upload Thumbnail</h3>
-                    <input
-                        required 
-                        className={classes.file} 
-                        type='file' 
-                        name='thumbnailImage' 
-                        onChange={imageHandler}
-                    />
+                    <label htmlFor="thumbnailImage">
+                        <input
+                            id="thumbnailImage"
+                            name="thumbnailImage"
+                            style={{ display: 'none' }}
+                            className={classes.file} 
+                            type="file"
+                            onChange={imageHandler} />
+                        <Button
+                            className="btn-choose"
+                            variant="outlined"
+                            component="span" 
+                            >
+                            Choose Files
+                        </Button>
+                        <span>{imageName === '' ? '' : imageName['name']}</span>
+                    </label>
                     <h3 className={classes.label}>Upload Video</h3>
-                    <input
-                        required 
-                        className={classes.file} 
-                        type='file' 
-                        name='video'  
-                        onChange={videoHandler}
-                    />
+                    <label htmlFor="video">
+                        <input
+                            id="video"
+                            name="video"
+                            style={{ display: 'none' }}
+                            className={classes.file} 
+                            type="file"
+                            onChange={videoHandler} />
+                        <Button
+                            className="btn-choose"
+                            variant="outlined"
+                            component="span" >
+                            Choose Files
+                        </Button>
+                        <span>{videoName === '' ? '' : videoName['name']}</span>
+                    </label>
                     <div style={{height: 20}} />
                     <Button  variant='contained' fullWidth={true} type='submit'>
                         Submit

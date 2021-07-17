@@ -22,7 +22,7 @@ const PlayVideo = props => {
     useEffect(() => {
         const getVideo = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/home/${id}`);
+                const res = await axios.get(process.env.REACT_APP_BASE_URL+`/home/${id}`);
                 const data = await res.data;
 
                 console.log(data);

@@ -29,6 +29,14 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'flex-start'
     },
+    pagination:{
+        justifyContent: "center"
+    },
+    pag: {
+        position: 'fixed',
+        bottom: 0,
+        marginLeft: '6%'
+    }
 }));
 
 const Home = props => {
@@ -41,7 +49,8 @@ const Home = props => {
     useEffect(() => {
         const getAllVideos = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/home?page=${page}`);
+                // console.log(process.env.REACT_APP_BASE_URL+`/home?page=${page}`);
+                const res = await axios.get(process.env.REACT_APP_BASE_URL+`/home?page=${page}`);
                 const data = await res.data;
 
                 // console.log(count);
@@ -54,10 +63,10 @@ const Home = props => {
 
         const getCount = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/count');
+                const res = await axios.get(process.env.REACT_APP_BASE_URL+'/count');
                 const data = await res.data;
                 
-                setCount(data);
+                setCount(Math.ceil(data/limit));
             }
             catch (error) {
                 console.log('Something went wrong', error);
@@ -87,7 +96,7 @@ const Home = props => {
                         </Paper>
                     </Grid>
                 ))}
-            <Container component={Box} py={3}>
+            <Container component={Box} py={4} classes={{root: classes.pag}}>
                 <Pagination 
                     size='large'
                     count={count}
@@ -97,6 +106,9 @@ const Home = props => {
                     style={{backgroundColor: 'white'}}
                     showFirstButton={true}
                     showLastButton={true}
+                    classes={{
+                        ul: classes.pagination
+                    }}
                     onChange={(event, value) => setPage(value)}
                 />
 

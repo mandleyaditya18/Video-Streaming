@@ -5,6 +5,7 @@ const cors = require('cors');
 const multer = require('multer');
 const Movie = require('./models/movie');
 const path = require('path');
+const {v4: uuidv4} = require('uuid');
 
 const app = express();
 
@@ -34,7 +35,7 @@ const storage = multer.diskStorage({
         callback(null, './uploads');
     },
     filename: (req, file, callback) => {
-        callback(null, file.originalname);
+      callback(null, file.fieldname+"-"+uuidv4()+path.extname(file.originalname));
     }
 })
 

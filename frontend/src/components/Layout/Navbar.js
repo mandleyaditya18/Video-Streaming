@@ -23,7 +23,7 @@ const Navbar = () => {
             <AppBar position="static" style={{backgroundColor: '#363636'}} >
                 <Toolbar>
                     <Typography variant="h4" className={classes.title}>
-                        Video Player
+                        <NavLink to="/home" className={classes.navlink}>Video Player</NavLink>
                     </Typography>
                     
                     <Button color="inherit">
