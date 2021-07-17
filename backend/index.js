@@ -4,6 +4,7 @@ require('dotenv').config();
 const cors = require('cors');
 const multer = require('multer');
 const Movie = require('./models/movie');
+const path = require('path');
 
 const app = express();
 
@@ -24,19 +25,42 @@ const corsOptions = {
 }
 
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, '../frontend/public/uploads');
+        callback(null, './uploads');
     },
     filename: (req, file, callback) => {
         callback(null, file.originalname);
     }
 })
 
-const upload = multer({storage: storage});
+const fileFilter = (req, file, cb) => {
+    if (file.fieldname === "thumbnailImage") { 
+      if (
+        file.mimetype === 'image/jpeg' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/png'
+      ) { 
+        cb(null, true);
+      } else {
+        cb(null, false); 
+      }
+    } else if (file.fieldname === "video") {
+      if (
+        file.mimetype === 'video/mp4'
+      ) { 
+        cb(null, true);
+      } else {
+        cb(null, false);
+      }
+    }
+};
+
+const upload = multer({storage: storage, fileFilter: fileFilter});
 
 app.get('/home', async (req, res) => {
     const videos = await Movie.find();
@@ -52,7 +76,7 @@ app.get('/home/:id', async (req, res) => {
 })
 
 app.post('/upload', upload.fields([{name: 'thumbnailImage'},{name: 'video'}]), (req, res) => {
-    console.log(req.files);
+    // console.log(req.files);
 
     const newMovie = new Movie({
         name: req.body.name,
@@ -62,7 +86,7 @@ app.post('/upload', upload.fields([{name: 'thumbnailImage'},{name: 'video'}]), (
         video: req.files.video[0].filename
     })
 
-    console.log(newMovie);
+    // console.log(newMovie);
 
     newMovie.save()
         .then(() => res.json('New Movie Uploaded'))

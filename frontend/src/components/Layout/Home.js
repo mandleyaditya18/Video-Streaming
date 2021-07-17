@@ -19,9 +19,10 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto'
     },
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         textAlign: 'center',
-        color: theme.palette.text,
+        color: 'white',
+        backgroundColor: '#404040'
     },
     text: {
         display: 'flex',
@@ -62,11 +63,11 @@ const Home = props => {
             <Grid container className={classes.root} spacing={3}>
                 {/* <img src={process.env.PUBLIC_URL + '/uploads/dog.png'} alt='dog' /> */}
                 {videos.map((video) => (
-                    <Grid container item key={video._id} xs={3}>
+                    <Grid container item key={video._id} xs={4}>
                         <Paper className={classes.paper}>
                             <Link to={`/home/${video._id}`}>
                                 <img 
-                                    src={`${process.env.PUBLIC_URL+'/uploads/'+video.thumbnail}`} 
+                                    src={process.env.REACT_APP_UPLOAD_PATH + video.thumbnail}
                                     alt={video.title} 
                                     className={classes.img}
                                     // onClick={() => playVideoHandler(video._id, video.video)} 

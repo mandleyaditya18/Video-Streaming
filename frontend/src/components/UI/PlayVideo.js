@@ -1,9 +1,19 @@
 import { Fragment, useEffect, useState } from "react";
 import ReactPlayer from 'react-player';
+import { makeStyles } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import axios from 'axios';
 
+const useStyles = makeStyles((theme) => ({
+    player: {
+        width: '100%',
+        height: '100%',
+        margin: 'auto'
+    }
+}));
+
 const PlayVideo = props => {
+    const classes = useStyles();
     const { id } = useParams();
     const [video, setVideo] = useState([]);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -32,10 +42,11 @@ const PlayVideo = props => {
     return (
         <Fragment>
             <ReactPlayer 
-                url={`${process.env.PUBLIC_URL+'/uploads/'+video.video}`} 
+                url={process.env.REACT_APP_UPLOAD_PATH + video.video} 
                 onClick={playHandler}
                 playing={isPlaying}
                 controls={true}
+                className={classes.player}
             />
         </Fragment>
     );

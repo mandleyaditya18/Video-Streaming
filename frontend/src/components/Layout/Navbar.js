@@ -20,7 +20,7 @@ const Navbar = () => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="secondary" >
+            <AppBar position="static" style={{backgroundColor: '#363636'}} >
                 <Toolbar>
                     <Typography variant="h4" className={classes.title}>
                         Video Player

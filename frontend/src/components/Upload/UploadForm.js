@@ -9,10 +9,16 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '0em'
     },
     form: {
-        minWidth: '40%'
+        minWidth: '90%'
     },
-    file: {
-        
+    root: {
+        backgroundColor: 'aliceblue',
+        width: '50%',
+        margin: 'auto',
+        marginTop: '5%'
+    },
+    text: {
+        backgroundColor: 'white'
     }
 }));
 
@@ -25,6 +31,11 @@ const UploadForm = props => {
     const [videoName, setVideoName] = useState('');
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState({
+        name: false,
+        year: false,
+        language: false
+    });
 
     const imageHandler = event => {
         event.preventDefault();
@@ -60,65 +71,112 @@ const UploadForm = props => {
         setLanguage('');
         setImageName('');
         setVideoName('');
-        setIsLoading(false);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 3000)
     }
 
     return (
-        <Grid container>
+        <Grid container className={classes.root}>
             <Grid container item alignItems='center' direction='column' style={{padding: 10}}>
                 <h1>Upload Video</h1>
                 <span>{message}</span>
                 <div style={{height: 10}} />
                 <form onSubmit={submitHandler} className={classes.form} encType='multipart/form-data'>
                     <h3 className={classes.label}>Movie Name</h3>
-                    <TextField 
+                    <TextField
+                        required
+                        error={isError.name} 
                         label='Movie Name' 
                         margin='normal'
                         variant='outlined'
                         fullWidth={true}
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        helperText=''
+                        onChange={(e) => {
+                            if (e.target.value.trim() === '' ){
+                                setIsError((prev) => {
+                                    return {...prev, name: true}
+                                });
+                            }
+                            else {
+                                setIsError((prev) => {
+                                    return {...prev, name: false}
+                                });
+                            }
+                            setName(e.target.value)
+                        }}
                     />
                     <h3 className={classes.label}>Year of Release</h3>
-                    <TextField 
-                        label='Year of Release' 
+                    <TextField
+                        required
+                        error={isError.year} 
+                        label='Year of Release'  
                         margin='normal'
                         variant='outlined'
                         fullWidth={true}
                         value={year}
-                        onChange={(e) => setYear(e.target.value)}  
+                        onChange={(e) => {
+                            if (e.target.value.trim() === '' ){
+                                setIsError((prev) => {
+                                    return {...prev, year: true}
+                                });
+                            }
+                            else {
+                                setIsError((prev) => {
+                                    return {...prev, year: true}
+                                });
+                            }
+                            setYear(e.target.value)
+                        }}  
                     />
                     <h3 className={classes.label}>Language</h3>
-                    <TextField 
+                    <TextField
+                        required
+                        error={isError.language} 
                         label='Language' 
                         margin='normal'
                         variant='outlined'
                         fullWidth={true}
                         value={language}
-                        onChange={(e) => setLanguage(e.target.value)} 
+                        onChange={(e) => {
+                            if (e.target.value.trim() === '' ){
+                                setIsError((prev) => {
+                                    return {...prev, language: true}
+                                });
+                            }
+                            else {
+                                setIsError((prev) => {
+                                    return {...prev, year: true}
+                                });
+                            }
+                            setLanguage(e.target.value)
+                        }} 
                     />
                     <h3 className={classes.label}>Upload Thumbnail</h3>
-                    <input 
+                    <input
+                        required 
                         className={classes.file} 
                         type='file' 
                         name='thumbnailImage' 
                         onChange={imageHandler}
                     />
                     <h3 className={classes.label}>Upload Video</h3>
-                    <input 
+                    <input
+                        required 
                         className={classes.file} 
                         type='file' 
                         name='video'  
                         onChange={videoHandler}
                     />
                     <div style={{height: 20}} />
-                    <Button color='secondary' variant='contained' fullWidth={true} type='submit'>
+                    <Button  variant='contained' fullWidth={true} type='submit'>
                         Submit
+                        <span>{isLoading && <Spinner />}</span>
                     </Button>
-                    <span>
-                        {isLoading && <Spinner />}
-                    </span>
+                    <div style={{height: 20}} />
                 </form>
+                    
             </Grid>
         </Grid>
     );
